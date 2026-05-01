@@ -1,15 +1,15 @@
 # Sh1njuu 的个人主页
 
-这是我的个人主页仓库，使用纯静态 HTML/CSS 构建，并通过 GitHub Pages 部署。
+这是我的个人主页仓库，使用纯静态 HTML/CSS 构建，并通过 GitHub Pages 部署。主页主要用于介绍我自己，记录学习过程、项目尝试和还在探索中的方向。
 
 访问地址：[https://sh1njuuovo.github.io/](https://sh1njuuovo.github.io/)
 
 ## 主页内容
 
-- 个人定位：Urban AI / Spatiotemporal Forecasting / AI Applications
-- 研究方向：城市时空预测、城市增长状态分析、城市智能体
-- 项目展示：城市增长状态分析、动静融合时空预测、AI 论文阅读与分析工具
-- 技术栈：Python、PyTorch、FastAPI、React、GIS、LLM Agent、Data Visualization
+- 个人介绍：研 0，正在探索自己的长期方向
+- 当前兴趣：AI 应用开发、数据分析、城市与空间问题、Web 表达
+- 项目记录：AI 论文阅读与分析工具、个人主页、学习中的实验
+- 技术栈：Python、FastAPI、Git、React、HTML/CSS、LLM、Data Analysis、GIS Basics
 - 联系方式：GitHub 主页链接
 
 ## 文件结构
@@ -47,5 +47,5 @@ https://sh1njuuovo.github.io/
 ## 维护建议
 
 - 项目成熟后，为每个项目补充 GitHub 仓库、Demo 或文档链接。
-- 如果后续有论文、竞赛、课程项目或实习经历，可以增加 Publications / Experience 区块。
-- 主页内容建议保持简短，把详细说明放到项目仓库或独立文档中。
+- 如果后续方向更明确，可以增加 Research / Experience / Publications 等区块。
+- 主页内容建议保持真实和简洁，不需要过早包装成成果展示页。
