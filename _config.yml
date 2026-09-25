@@ -16,7 +16,7 @@ timezone: Asia/Shanghai
 
 title: Shinjuu 的笔记 # the main title
 
-tagline: AI 应用、城市计算和小工具 # it will display as the subtitle
+tagline: # it will display as the subtitle，留空就不显示
 
 description: >- # used by seo meta and the atom feed
   记录学习轨迹、项目尝试和阶段性想法。算法题笔记、AI 应用开发、城市计算探索，都放在这里。
@@ -99,7 +99,7 @@ theme_mode: # [light | dark]
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar: /assets/img/avatar.svg
+avatar: /assets/img/avatar.jpg
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.

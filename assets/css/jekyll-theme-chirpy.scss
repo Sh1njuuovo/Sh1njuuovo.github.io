@@ -1,0 +1,21 @@
+---
+---
+
+@use 'abstracts/variables' with (
+  $theme: '{{ site.theme_mode }}'
+);
+
+/* prettier-ignore */
+@use 'main
+{%- if jekyll.environment == 'production' -%}
+  .bundle
+{%- endif -%}
+';
+
+/* append your custom style below */
+
+/* 副标题留空时不要占位置。主题默认给它写死了 3rem 高度，
+   即使 `_config.yml` 里的 tagline 为空，也会留一条空白。 */
+.site-subtitle:empty {
+  display: none;
+}
