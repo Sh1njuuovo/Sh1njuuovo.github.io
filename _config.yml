@@ -149,9 +149,14 @@ assets:
     env: # [development | production]
 
 pwa:
+  # 这里保持开启，但把下面的 cache.enabled 留空。
+  # 原因：主题的离线缓存会把首页和样式存进浏览器，而 Service Worker 脚本本身
+  # 不随内容更新，浏览器就不会刷新缓存，导致回头访问的人一直看到旧页面。
+  # cache.enabled 留空时，页面会在加载后注销掉已有的 Service Worker，之后始终取最新内容。
+  # 想要离线阅读就把 cache.enabled 改成 true，但要知道每篇文章更新后需要手动刷新缓存。
   enabled: true # The option for PWA feature (installable)
   cache:
-    enabled: true # The option for PWA offline cache
+    enabled: # The option for PWA offline cache
     # Paths defined here will be excluded from the PWA cache.
     # Usually its value is the `baseurl` of another website that
     # shares the same domain name as the current website.
