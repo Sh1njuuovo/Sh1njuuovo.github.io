@@ -74,7 +74,8 @@ bash tools/check.sh     # 构建并检查站内链接，和线上跑的是同一
 | 社交链接 | `_config.yml` 里的 `social`，图标开关在 `_data/contact.yml` |
 | 侧边栏文案 | `_data/locales/zh-CN.yml`，键名用文件名（不含扩展名） |
 | 关于页、链接页 | `_tabs/about.md`、`_tabs/links.md` |
-| 主题配色 | 在 `assets/css/` 下新建覆盖文件，或者直接改 `_sass` 里的变量 |
+| 主题样式微调 | `assets/css/jekyll-theme-chirpy.scss`，文件末尾追加自己的规则 |
+| 主题配色 | 改 `_sass` 里的变量，或者在上面那个文件的末尾覆盖 |
 
 ## 部署
 
