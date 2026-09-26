@@ -4,6 +4,28 @@
 
 访问地址：https://sh1njuuovo.github.io
 
+## 日常怎么改（在网页上完成）
+
+大部分改动不用装任何工具，浏览器里就能做，手机上也可以。
+
+1. 打开 https://github.com/Sh1njuuovo/Sh1njuuovo.github.io
+2. 进到要改的文件，点右上角的铅笔图标
+3. 改完拉到页面底部，点绿色的 Commit changes
+4. 点顶部的 Actions 标签，等这次构建出现绿色对勾，一般一到两分钟
+5. 打开网站看效果。如果还是旧内容，用 Command + Shift + R 强制刷新，GitHub Pages 对页面有 10 分钟缓存
+
+| 想改什么 | 改哪里 |
+| --- | --- |
+| 加一篇笔记 | `_posts/` 目录，新建 `年-月-日-英文短名.md` |
+| 首页那张图 | 图片传到 `assets/img/`，再改 `index.md` 里的文件名 |
+| 关于页 | `_tabs/about.md` |
+| 常用链接 | `_tabs/links.md` |
+| 侧边栏的名称 | `_data/locales/zh-CN.yml` |
+| 网站标题和描述 | `_config.yml` 里的 `title`、`description` |
+| 头像 | 用同名文件覆盖 `assets/img/avatar.jpg` |
+
+改动多的时候可以拉到本地改，见后面「本地预览」一节。
+
 ## 内容结构
 
 侧边栏一共六项，顺序由 `_tabs/` 目录里每个文件的 `order` 决定。
