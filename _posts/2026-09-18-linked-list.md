@@ -2,7 +2,7 @@
 title: "链表（Linked List）"
 date: 2026-09-18 11:50:20 +0800
 categories: [算法]
-tags: [刷题]
+tags: ["LeetCode Hot 100"]
 description: >-
   链表题的思路都好想，难在代码写对。这一组的共性就是在有限的几个指针之间做文章，靠哨兵、快慢指针、反转模板这三样东西覆盖大部分题。
 ---

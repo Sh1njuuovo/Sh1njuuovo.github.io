@@ -2,7 +2,7 @@
 title: "子串（Substring / Subarray）"
 date: 2026-09-11 13:03:01 +0800
 categories: [算法]
-tags: [刷题]
+tags: ["LeetCode Hot 100"]
 description: >-
   子串问题的共性是「连续」。暴力枚举所有区间的成本是 O(n²)，优化的方向都是让区间信息可增量维护，具体按问题类型选三种工具。
 ---

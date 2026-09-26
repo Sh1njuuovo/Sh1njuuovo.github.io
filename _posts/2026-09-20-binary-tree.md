@@ -2,7 +2,7 @@
 title: "二叉树（Binary Tree）"
 date: 2026-09-20 10:58:50 +0800
 categories: [算法]
-tags: [刷题]
+tags: ["LeetCode Hot 100"]
 description: >-
   树题的下标和指针都不复杂，复杂的是「递归函数该返回什么」。把这一件事定下来，代码基本就出来了。Hot 100 的十五道树题，按递归形状归类只有六种写法。
 ---

@@ -2,7 +2,7 @@
 title: "算法笔记索引"
 date: 2026-09-25 21:30:00 +0800
 categories: [算法]
-tags: [刷题]
+tags: ["LeetCode Hot 100"]
 description: >-
   Hot 100 各专题的入口列表，以及这个站点怎么用。
 ---
