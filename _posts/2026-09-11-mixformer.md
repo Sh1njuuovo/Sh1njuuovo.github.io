@@ -59,6 +59,10 @@ MixFormer 将高阶特征交互与行为聚合放入同一组重复 block：先�
 
 ## 3. 输入、模块与张量形状
 
+![图 1](/assets/img/mixformer/fig1-overview.png)
+
+_图 1：MixFormer 的整体架构。非序列特征先切分并投影成 N 个 head，经过 L 层 MixFormer block 后接多个 TaskNet；每层由 Query Mixer、Cross Attention、Output Fusion 三部分组成。_
+
 ### 3.1 Embedding 与 Split
 
 **论文内容（式 1–2）**：非序列 embedding 拼成长度 D_ns 的向量，均匀切成 N 段，各自投影到 D 维。
@@ -156,6 +160,10 @@ medium 配置为 N=16、L=4、D=768。**原文 small 配置写 D=386**，与图 
 
 **论文内容（§3.4，图 2）**：将非序列 heads 分为用户侧 N_U 和物品侧 N_G，实践取 1:1。通过 HeadMixing 后的逐元素 mask 禁止 item 信息进入 user heads，保留 user → item 的影响。
 
+![图 2](/assets/img/mixformer/fig2-ui-decoupled.png)
+
+_图 2：解耦之后的架构。绿色是用户侧计算，同一请求内可以跨候选共享；红色是物品侧计算，每个候选都要单独算一遍。_
+
 式 10–11（按零起始下标）：
 
 $$
@@ -201,6 +209,10 @@ $$
 
 **核对更正**：图中有明确数值标签，以下不是目测柱长估算。单位保留横轴原文 AUC Gain；未给换算定义，不解释成绝对 AUC 减少 0.03。
 
+![图 3](/assets/img/mixformer/fig3-ablation.png)
+
+_图 3：模块消融，对比基准是 MixFormer-small，横轴是 AUC Gain。_
+
 | 对 MixFormer-small 的改动 | 图示 AUC Gain |
 |---|---:|
 | Query Mixer 去掉 HeadMixing | −0.03 |
@@ -223,11 +235,23 @@ $$
 
 “Dense 和 Sequence 都能受益”得到实验支持；没有证明任意数据、任意预算下普遍最优或超过 10k 后继续保持趋势。
 
+![图 4](/assets/img/mixformer/fig4-dense-scaling.png)
+
+_图 4：固定序列长度 512，只放大模块规模时的效果与计算量曲线。_
+
+![图 5](/assets/img/mixformer/fig5-sequence-scaling.png)
+
+_图 5：序列长度从 512 扩到 10000 时的效果曲线。_
+
 ## 7. 服务时延与线上收益
 
 ### 7.1 Figure 6：直接标注的时延
 
 图中候选规模随横轴递增，约为 370–680；各点精确候选数未列成表，不把近似位置当作精确配置。
+
+![图 6](/assets/img/mixformer/fig6-latency.png)
+
+_图 6：不同候选规模下的服务时延与加速比。_
 
 | 图中点（从左至右） | MixFormer ms | UI ms | 图示 SpeedUp |
 |---|---:|---:|---:|
@@ -252,58 +276,10 @@ $$
 
 对照线上 STCA → RankMixer（超过 1B 参数）。§4.6 明确报告 **两周** A/B 观察；原表还包含活跃度分组，见 PDF 第 7 页。作者称统计显著且收益仍在增长，但未完整报告流量、置信区间、p 值、方差及 SRM，不能独立复核。
 
-## 8. 与已有两篇的联系
+## 8. 总结
 
-| 论文 | 本次阅读中的重点 |
-|---|---|
-| RankMixer | 以固定 Mixing + 独立 FFN 改善特征交互与硬件效率 |
-| HyFormer | Decode 后 Boost，按序列保留 Query，并经 Split 进入下一层 |
-| MixFormer | Mixer 形成的各 head 直接作为 cross-attention head，再经 Fusion；另设计 UI 单向复用 |
+MixFormer 把特征交叉和行为序列放进同一组重复 block：Query Mixer 先做跨 head 交互，每个 head 再直接作为 cross-attention 的 Query 去读历史，最后 per-head 融合。Table 1 里它在中等参数预算下同时优于强串联和并联基线，Figure 4–5 说明 dense 和 sequence 两条轴都还能继续受益。
 
-三者共享部分动机和组件；不能只凭模块先后顺序认定严格优劣、首创关系或完全等价。数据、指标、版本和 baseline 均不同，线上增益不能横向排名。
+比较有意思的是 UI-MixFormer。它在 HeadMixing 阶段就切断 item 到 user 的信息流，让同一请求里的数百个候选共享用户侧计算，Figure 6 测到约 30%–34% 的延迟下降。
 
-## 9. 成本和迁移边界
-
-- Table 1 不含完整 sparse 参数，不能据 dense M 推断总存储。
-- 未给完整 GPU-hours、收敛时长、训练 step、峰值内存等，不能证明总体训练费用更低。
-- 单请求数百候选是 UI 复用收益的重要条件，逐条独立评估未必重现同等节省。
-- 小数据可能首先受限于过拟合、短历史和稀少异质字段，不能直接复现十亿参数 / 10k 历史的趋势。
-- 本次未核查最新代码发布或外部复现；不把“未查”写成“没有代码”。
-
-## 10. 个人学习状态与待办
-
-交接中本人主要通过提问和指定分析角度推进，没有完整机制复述或理解检查回答，也没有明确错误复述可记录。
-
-| 内容 | 可确认状态 |
-|---|---|
-| 任务、数据流、三个模块、UI-MixFormer | 已辅助阅读，独立解释待验证 |
-| Table 1、Figure 3–6、成本与证据边界 | 已讨论，独立评估待验证 |
-| 逐公式推导与源码 | 未完成 |
-| 项目计划 | 未讨论 |
-
-### 下次优先自测
-
-- [ ] 用 `[B,4,8]` 和 `[B,5,32]` 串起 Mixer、Attention、Fusion。
-- [ ] 解释 Q 为什么直接对应 attention heads，softmax 沿哪一维归一化。
-- [ ] 解释 mask 为什么允许 User → Item，以及有哪些用户侧计算可共享。
-- [ ] 区分参数量、GFLOPs/Batch、延迟下降和加速倍数。
-- [ ] 说明图 4–5 分别固定了什么，为什么仅起点 FLOPs 可比。
-
-### 待核实
-
-- [ ] small 的 D=386 与 N=16 的均匀分块如何兼容。
-- [ ] 原始 action embedding 对齐 ND、历史流层间传递、K/V 投影共享规则。
-- [ ] TaskNet 聚合、loss 权重、线上业务分数及样本标注细节。
-- [ ] UI mask、归一化范围、head 布局和 RLB/cache 的实际代码。
-- [ ] FLOPs 的前向/反向计数口径、完整训练成本和公平性控制。
-- [ ] 完全双塔对照、逐层解释性、超过 10k 的趋势及公开数据适用性。
-
-## 11. 整理核对记录
-
-1. 本地 PDF 确认为 v2（2026-07-02），首页有 KDD 2026 与 DOI 信息。
-2. 方法、设置与两张主表按 PDF 文本核对；第 7–8 页视觉核对图 3–6 和线上表。
-3. 重算教学 softmax；图 3 更新为直接标注值，同时保留单位边界。
-4. 标注 Table 1 UI 行启用 RLB 的例外，未混用 HyFormer 的训练 FLOPs 定义。
-5. 区分延迟下降率与加速倍数，补充两周 A/B 观察。
-6. 标注原文 small 的 D=386 整除疑问，不擅自修改原文配置。
-7. 保留学习状态和未讨论的项目边界；原交接未改动。
+读的时候要留意证据边界：Table 1 只统计 dense 参数，Figure 5 的 FLOPs 只在起点可比，线上收益缺少置信区间，UI 行的优势里也混着 RLB 的作用。换到别的场景复现时，这几处都要重新验证。
