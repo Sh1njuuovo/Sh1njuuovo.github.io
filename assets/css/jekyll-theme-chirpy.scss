@@ -19,3 +19,39 @@
 .site-subtitle:empty {
   display: none;
 }
+
+/* 首页的入口卡片 */
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+  margin: 1.75rem 0;
+}
+
+.entry-card {
+  display: block;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--main-border-color);
+  border-radius: 0.6rem;
+  background: var(--card-bg);
+  color: var(--text-color);
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    border-color: var(--link-color);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .entry-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .entry-desc {
+    font-size: 0.875rem;
+    color: var(--text-muted-color);
+    line-height: 1.6;
+  }
+}

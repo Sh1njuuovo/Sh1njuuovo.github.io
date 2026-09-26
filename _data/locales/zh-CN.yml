@@ -1,4 +1,5 @@
-# 侧边栏的文案，key 用文件名（不含扩展名），会和主题自带的词条合并
+# 侧边栏文案。key 用文件名（不含扩展名），会和主题自带的词条合并。
+# 主题自带的四个键是 categories / tags / archives / about，这里只覆盖需要改的。
 tabs:
-  leetcode: 力扣索引
+  archives: 笔记
   links: 常用链接

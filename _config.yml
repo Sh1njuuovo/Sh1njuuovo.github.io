@@ -162,7 +162,9 @@ pwa:
     deny_paths:
       # - "/example"  # URLs match `<SITE_URL>/example/*` will not be cached by the PWA
 
-paginate: 10
+# 首页现在是自己写的介绍页，不再用它来翻页，所以关掉分页。
+# 全部笔记按时间列在「笔记」页，不需要翻页。
+paginate:
 
 # The base URL of your site
 baseurl: ""

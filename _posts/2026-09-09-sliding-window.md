@@ -1,8 +1,8 @@
 ---
 title: "滑动窗口（Sliding Window）"
 date: 2026-09-09 21:15:02 +0800
-categories: [力扣]
-tags: [滑动窗口, Hot100]
+categories: [算法]
+tags: [刷题]
 description: >-
   维护一个「连续且满足条件」的区间，right 负责扩展、left 负责收缩，两个指针只前进不回退；每个元素最多进一次、出一次，整体 O(n)。
 ---
