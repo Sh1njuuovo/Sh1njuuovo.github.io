@@ -1,8 +1,8 @@
 ---
-title: "MiniOneRec：从商品语义编码到生成式推荐"
+title: "MiniOneRec: An Open-Source Framework for Scaling Generative Recommendation"
 date: 2026-09-13 18:00:00 +0800
-categories: [论文, 生成式推荐]
-tags: ["语义 ID", "强化学习"]
+categories: [论文, 推荐系统]
+tags: []
 description: >-
   MiniOneRec 把商品编码成三级语义 ID，让语言模型根据用户历史直接生成下一件商品，并用持续语义对齐和推荐奖励改进生成结果。
 math: true
@@ -10,7 +10,6 @@ math: true
 
 [全部论文](/categories/%E8%AE%BA%E6%96%87/)
 
-- **论文**：MiniOneRec: An Open-Source Framework for Scaling Generative Recommendation
 - **作者**：Xiaoyu Kong、Leheng Sheng、Junfei Tan 等，中国科学技术大学、新加坡国立大学
 - **版本**：arXiv:2510.24431v1，2025-10-28，19 页
 - **链接**：[arXiv](https://arxiv.org/abs/2510.24431) · [代码与模型](https://huggingface.co/kkknight/MiniOneRec)

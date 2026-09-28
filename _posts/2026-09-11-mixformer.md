@@ -1,8 +1,8 @@
 ---
-title: "MixFormer：Dense 与行为序列的联合扩展"
+title: "MixFormer: Co-Scaling Up Dense and Sequence in Industrial Recommenders"
 date: 2026-09-11 23:30:00 +0800
 categories: [论文, 推荐系统]
-tags: ["Co-scaling", "序列建模"]
+tags: []
 description: >-
   MixFormer 把特征交叉和行为序列聚合放进同一组重复 block，在固定算力预算下同时扩展 dense 容量和历史长度，并用单向 mask 让同一请求里的候选共享用户侧计算。
 math: true
@@ -10,7 +10,6 @@ math: true
 
 [全部论文](/categories/%E8%AE%BA%E6%96%87/)
 
-- **论文**：MixFormer: Co-Scaling Up Dense and Sequence in Industrial Recommenders
 - **作者**：Xu Huang、Hao Zhang、Zhifang Fan、Yunwen Huang 等，ByteDance
 - **版本**：arXiv:2602.14110v2，2026-07-02，10 页，KDD 2026
 - **链接**：[arXiv](https://arxiv.org/abs/2602.14110v2) · [DOI](https://doi.org/10.1145/3770855.3818447)
