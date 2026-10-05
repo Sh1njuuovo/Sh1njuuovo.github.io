@@ -4,7 +4,7 @@ date: 2026-10-05 10:00:00 +0800
 categories: [大模型]
 tags: [LLM 基础]
 description: >-
-  面向搜推论文的六步大模型基础学习路线，附分步笔记和验收练习。
+  我学习大模型基础时整理的六步路线，附分步笔记和复习要点。
 math: true
 ---
 
@@ -17,19 +17,19 @@ math: true
 5. [预训练、SFT、RL 与 DPO](/posts/llm-pretraining-sft-and-rl/)
 6. [RoPE、GQA 与生成式推荐](/posts/llm-rope-gqa-and-generative-recommendation/)
 
-完成分步阅读后，可看[自回归大语言模型综合笔记](/posts/llm-integrated-notes/)复习。
+回看整体知识时，可查阅[自回归大语言模型综合笔记](/posts/llm-integrated-notes/)。
 
 > 创建：2026-09-08
-> 目标：掌握 Transformer、Attention、decoder-only LLM、tokenization、SFT、RL、beam search，为阅读推荐论文和代码建立基础。
+> 当时的目标：补齐 Transformer、Attention、decoder-only LLM、tokenization、SFT、RL、beam search 等基础，方便阅读推荐论文和代码。
 > 时间预算：5–6 天，约 14–18 小时；步骤 2、3 优先投入时间。
 
-## 学习原则
+## 当时的学习安排
 
-- 以六步路线为主线，按需观看材料，达到验收要求就继续。
-- CS336 作为查漏资料，暂不完整刷课或做作业。
-- 小练习穿插进行，无需等待模型生成高质量文本。
-- 每一步记录核心概念、一个例子和仍不理解的问题。
-- 暂时跳过 MoE、分布式训练、FlashAttention 实现和 RL 算法完整推导。
+- 按六个主题整理笔记，遇到不熟悉的概念再回看材料。
+- CS336 主要用于查漏，当时没有完整刷课或做作业。
+- 用短例子和小实验检查自己的理解，重点记录现象和疑问。
+- 每个主题记录核心概念、用过的例子和仍不清楚的问题。
+- 当时暂未深入 MoE、分布式训练、FlashAttention 实现和 RL 算法完整推导。
 
 ## 1. Tokenization 与 Embedding｜约 2 小时
 
@@ -46,11 +46,11 @@ math: true
 - [Let's build the GPT Tokenizer](https://www.youtube.com/watch?v=zduSFxRajkE)：选看开头至 BPE 基础讲解完成，不必看完整视频。
 - [minbpe](https://github.com/karpathy/minbpe)：作为代码备查，视频看懂后无需再完整学习一遍。
 
-### 小练习与验收
+### 回看时关注
 
-- [ ] 对一段中文和英文观察 token、ID 与解码结果。
-- [ ] 能解释：为什么 token 不一定对应一个字或一个单词？
-- [ ] 能解释 token ID 如何变成 embedding。
+- 对一段中文和英文观察 token、ID 与解码结果。
+- 能解释：token 为什么不一定对应一个字或一个单词。
+- 能解释 token ID 如何变成 embedding。
 
 ## 2. Attention｜约 3 小时
 
@@ -67,11 +67,11 @@ math: true
 - [Let's build GPT](https://www.youtube.com/watch?v=kCc8FmEb1nY)：从历史信息聚合到 self-attention、multi-head 的部分。
 - [配套代码](https://github.com/karpathy/ng-video-lecture/blob/master/gpt.py)：看 `Head` 和 `MultiHeadAttention`。
 
-### 小练习与验收
+### 回看时关注
 
-- [ ] 用三个 token 的例子，画出 attention 矩阵和 causal mask。
-- [ ] 能逐项解释下方公式，并跟踪主要张量形状。
-- [ ] 能解释多头与单头的区别，以及为什么不能读取未来位置。
+- 三个 token 的例子中，attention 矩阵和 causal mask 的形状。
+- 下方公式各项的含义与主要张量形状。
+- 多头与单头的区别，以及未来位置如何被遮住。
 
 $$
 \operatorname{Attention}(Q,K,V)
@@ -97,12 +97,12 @@ $$
 - [配套代码](https://github.com/karpathy/ng-video-lecture/blob/master/gpt.py)：重点看 `get_batch`、`Block`、`forward`、`generate`。
 - [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)：仅用于补整体结构、残差和归一化的直觉。
 
-### 小练习与验收
+### 回看时关注
 
-- [ ] 为一句短文本写出训练输入与对应标签。
-- [ ] 对照代码讲清楚：token ID → embedding → blocks → logits → loss／生成。
-- [ ] 能解释训练时为什么不需要逐个生成输入 token。
-- [ ] 有环境就跑一次小 GPT 的训练与生成，无需等待高质量输出。
+- 短文本的训练输入与对应标签如何错位。
+- 代码中的 token ID、embedding、blocks、logits 与 loss／生成过程。
+- 训练时为何能同时计算多个位置。
+- 小 GPT 的训练与生成实验中，各张量和输出是什么。
 
 ## 4. 解码策略与 KV Cache｜约 2 小时
 
@@ -118,12 +118,12 @@ $$
 - [Hugging Face 生成策略教程](https://huggingface.co/blog/how-to-generate)：重点读上述解码策略。
 - [CS336 讲义仓库](https://github.com/stanford-cs336/spring2025-lectures)：按 `KV cache` 查阅，理解动机即可。
 
-### 小练习与验收
+### 回看时关注
 
-- [ ] 手算两步、beam width 为 2 的搜索。
-- [ ] 用同一个提示词分别尝试 greedy、beam search 和 sampling；环境配置不顺时，先用概率表完成练习。
-- [ ] 能区分序列搜索和随机采样，知道 beam search 不保证全局最优。
-- [ ] 能说清 KV cache 缓存的是哪些中间结果。
+- 手算两步、beam width 为 2 的搜索。
+- 用同一个提示词分别尝试 greedy、beam search 和 sampling；也可用概率表对照不同选择。
+- 序列搜索与随机采样的区别，以及 beam search 的局限。
+- KV Cache 保存哪些中间结果。
 
 ## 5. 预训练、SFT 与 RL｜约 2–3 小时
 
@@ -140,11 +140,11 @@ $$
 - [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI)：选看预训练、SFT、RL 相关章节。
 - [Hugging Face TRL](https://github.com/huggingface/trl)：仅用于查看 SFT、DPO、奖励优化等方法的定位，暂不学习训练 API。
 
-### 小练习与验收
+### 回看时关注
 
-- [ ] 用同一个问答任务，分别举出预训练文本、SFT 样本、偏好对和奖励信号。
-- [ ] 能解释各阶段用什么数据、优化什么目标。
-- 暂时跳过 PPO、GRPO 推导，以及完整微调实验。
+- 用同一个问答任务，分别举出预训练文本、SFT 样本、偏好对和奖励信号。
+- 各训练阶段使用的数据和优化目标。
+- 当时没有展开 PPO、GRPO 推导及完整微调实验。
 
 ## 6. 补充现代 LLM 概念，衔接推荐｜约 1–2 小时
 
@@ -162,15 +162,15 @@ $$
 - [GQA](https://arxiv.org/abs/2305.13245)：MHA、MQA、GQA 的结构对比图。
 - [TIGER](https://arxiv.org/abs/2305.05065)：摘要、整体框架图、物品表示与生成流程，作为下一阶段预习。
 
-### 小练习与验收
+### 回看时关注
 
-- [ ] 解释一件物品如何表示为一个或多个 token。
-- [ ] 解释为什么生成的 token 序列需要映射回合法物品。
-- [ ] 理解这种对应关系只是入口，推荐还涉及物品表示、候选空间、用户反馈和评价指标。
+- 一件物品如何表示为一个或多个 token。
+- 生成的 token 序列如何映射回合法物品。
+- 这种对应关系之外，还需关注物品表示、候选空间、用户反馈和评价指标。
 
-## 建议执行节奏
+## 当时的学习顺序
 
-| 时间 | 内容 |
+| 顺序 | 内容 |
 |---|---|
 | 第 1 天 | 步骤 1：Tokenization 与 Embedding |
 | 第 2 天 | 步骤 2：Attention |
@@ -178,4 +178,4 @@ $$
 | 第 5 天 | 步骤 5：预训练、SFT 与 RL |
 | 第 6 天 | 步骤 6：衔接推荐，并查漏 |
 
-步骤 1–5 掌握后即可进入推荐论文；步骤 6 可以随论文阅读补齐。时间预算包含暂停理解与小练习，不以视频播放时长代替学习时长。
+这张表记录当时的时间安排。后来阅读推荐论文时，我继续按需回看第六步及前面的概念。

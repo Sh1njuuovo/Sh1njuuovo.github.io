@@ -13,7 +13,7 @@ math: true
 > 整理日期：2026-09-08
 > 所属路线：[LLM 基础六步学习路线](/posts/llm-foundations/)
 > 前置：[Attention](/posts/llm-attention/)
-> 状态：本轮讲解的核心概念与小 GPT 实验已完成。
+> 状态：已整理核心概念，并运行小 GPT 实验。
 > 实验代码：[mini_gpt_demo.py](/assets/code/llm/mini_gpt_demo.py)
 
 ## 1. 从 Attention 到完整模型
@@ -60,7 +60,7 @@ $$
 - 若 X 是 `[5, 32]`，分支输出也是 `[5, 32]`。
 - 若分支输出全为 0，结果就是 X。
 
-以上两道验收题均已独立回答正确。
+这两个例子说明残差相加需要形状一致，且零分支输出会保留输入。
 
 ## 3. LayerNorm：对每个 token 的特征归一化
 
@@ -91,7 +91,7 @@ $$
 
 每一行独立计算均值与方差。忽略 ε，且 γ=1、β=0 时，两行都归一化为约 `[-1.225, 0, 1.225]`。应用可学习的缩放与偏移后，不必再具有零均值和单位方差。
 
-对 `[5, 32]`，在每个 token 的 32 个维度上统计，输出仍是 `[5, 32]`。这道题已独立回答正确。
+对 `[5, 32]`，在每个 token 的 32 个维度上统计，输出仍是 `[5, 32]`。
 
 ## 4. MLP / FFN：逐位置非线性变换
 
@@ -165,7 +165,7 @@ Token embedding 形状是 `[B, T, d]`，位置 embedding 是 `[T, d]`，相加�
 
 本例使用 causal self-attention，没有单独的 encoder 或 cross-attention，属于 decoder-only 架构。
 
-作为对照：encoder 常用于对输入进行双向编码；经典 encoder–decoder 模型先编码源序列，再由 decoder 通过 causal self-attention 和对 encoder 输出的 cross-attention 生成目标序列。该架构对照仅作补充，尚未单独练习验收。
+作为对照：encoder 常用于对输入进行双向编码；经典 encoder–decoder 模型先编码源序列，再由 decoder 通过 causal self-attention 和对 encoder 输出的 cross-attention 生成目标序列。这里只记录架构对照，尚未进一步展开。
 
 ## 7. LM Head、Logits 与词表
 
@@ -228,7 +228,7 @@ inputs = sequence[:, :-1]
 targets = sequence[:, 1:]
 ```
 
-练习中 `[12, 5, 8, 3, 9]` 得到输入 `[12, 5, 8, 3]`、标签 `[5, 8, 3, 9]`，已独立回答正确。
+以 `[12, 5, 8, 3, 9]` 为例，输入为 `[12, 5, 8, 3]`，标签为 `[5, 8, 3, 9]`。
 
 训练输入的真实 token 已经给出，causal mask 又能防止读取未来，因此可以一次计算各位置的预测，无需先生成前一个位置的答案。
 
@@ -338,20 +338,20 @@ embedding 参数最大变化：0.010221719741821289
 
 输出中出现 5、6 不足以说明模型学会了数数；本实验只验证训练与生成流程。脚本固定生成三次，未实现结束 token 检查，也不能直接生成超出位置表容量的长序列。
 
-## 11. 验收记录
+## 11. 学习记录
 
 - [x] 理解残差相加的形状要求，以及零分支输出时保留 X。
 - [x] 理解 LayerNorm 对每个 token 的特征维度归一化。
 - [x] 理解 MLP 逐位置处理、Attention 跨位置汇总。
 - [x] 理解完整 block 通常保持 `[B, T, d]` 形状。
-- [x] 正确判断 logits 形状，并澄清 logits 与概率的区别。
+- [x] 记录了 logits 形状，并澄清 logits 与概率的区别。
 - [x] 理解 tokenizer ID 与输入 embedding、输出候选的对应关系。
 - [x] 能构造向后错一位的训练标签。
 - [x] 理解生成时使用最后位置输出，并将新 ID 追加到输入。
 - [x] 理解普通生成不更新参数。
 - [x] 运行小 GPT 的一次训练更新与三轮生成，获得符合预期的形状和输出。
 
-本轮核心内容已完成。后续第四步会展开 greedy、sampling、temperature、top-k、top-p、beam search 与 KV cache。
+本次学习记录到这里。后续笔记继续整理解码策略和 KV Cache。
 
 ## 参考材料
 

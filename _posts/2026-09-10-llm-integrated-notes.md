@@ -13,7 +13,7 @@ math: true
 > 整理日期：2026-09-10
 > 定位：LLM 最小知识集综合笔记；统一术语、符号与知识顺序，供复习和后续论文阅读使用。
 > 范围：tokenization、embedding、Transformer、位置表示、预训练、SFT、RL、DPO、解码与 KV Cache。不展开前沿推荐论文、Semantic ID 或推荐评估。
-> 学习依据：本站六步学习笔记、已完成的示例实验与后续图文复盘。公式采用便于教学的标准形式；具体模型实现可能不同。
+> 学习依据：本站六步学习笔记、已完成的示例实验与后续图文复盘。公式采用常见的简化形式；具体模型实现可能不同。
 
 ## 摘要
 
@@ -299,7 +299,7 @@ $$
 \mathcal L_{\mathrm{DPO}}=-\mathbb E[\log\sigma(\beta\Delta_\theta)].
 $$
 
-β>0 控制目标尺度，σ 是 sigmoid。该公式作为综合笔记的补充，不要求本阶段推导。
+β>0 控制目标尺度，σ 是 sigmoid。这里记录公式形式，暂未推导。
 
 DPO 优化相对于参考策略的回答偏好，通常不另训显式奖励模型，也不要求标准离线流程持续在线采样。它不保证 chosen 绝对概率每次都提高，也不能与所有在线 RL 方法混称。
 
@@ -414,7 +414,7 @@ RoPE、GQA、SFT、RL、DPO 已做概念学习，尚未完成相应训练或实�
 ### 原始材料入口
 
 - [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
-- [Karpathy GPT 教学代码](https://github.com/karpathy/ng-video-lecture)
+- [Karpathy GPT 示例代码](https://github.com/karpathy/ng-video-lecture)
 - [minbpe](https://github.com/karpathy/minbpe)
 - [RoFormer / RoPE](https://arxiv.org/abs/2104.09864)
 - [GQA](https://arxiv.org/abs/2305.13245)
