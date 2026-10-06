@@ -1,6 +1,6 @@
 ---
-title: "第四步笔记：解码策略与 KV Cache"
-date: 2026-09-09 10:00:00 +0800
+title: "4 解码策略与 KV Cache 笔记"
+date: 2026-10-05 10:04:00 +0800
 categories: [大模型]
 tags: [LLM 基础]
 description: >-

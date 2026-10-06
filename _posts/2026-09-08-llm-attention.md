@@ -1,6 +1,6 @@
 ---
-title: "第二步笔记：Attention"
-date: 2026-09-08 10:00:00 +0800
+title: "2 Attention 笔记"
+date: 2026-10-05 10:06:00 +0800
 categories: [大模型]
 tags: [LLM 基础]
 description: >-

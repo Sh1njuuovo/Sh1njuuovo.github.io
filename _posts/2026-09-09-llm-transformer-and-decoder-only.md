@@ -1,6 +1,6 @@
 ---
-title: "第三步笔记：Transformer 与 Decoder-only LLM"
-date: 2026-09-09 10:00:00 +0800
+title: "3 Transformer 与 Decoder-only LLM 笔记"
+date: 2026-10-05 10:05:00 +0800
 categories: [大模型]
 tags: [LLM 基础]
 description: >-

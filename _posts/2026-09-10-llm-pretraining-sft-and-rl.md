@@ -1,6 +1,6 @@
 ---
-title: "第五步笔记：预训练、SFT、RL 与 DPO"
-date: 2026-09-10 10:00:00 +0800
+title: "5 预训练、SFT、RL 与 DPO 笔记"
+date: 2026-10-05 10:03:00 +0800
 categories: [大模型]
 tags: [LLM 基础]
 description: >-

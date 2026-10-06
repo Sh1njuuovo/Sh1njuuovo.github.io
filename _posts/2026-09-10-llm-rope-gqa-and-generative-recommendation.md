@@ -1,6 +1,6 @@
 ---
-title: "第六步笔记：RoPE、GQA 与生成式推荐"
-date: 2026-09-10 10:00:00 +0800
+title: "6 RoPE、GQA 与生成式推荐笔记"
+date: 2026-10-05 10:02:00 +0800
 categories: [大模型]
 tags: [LLM 基础]
 description: >-

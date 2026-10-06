@@ -1,6 +1,6 @@
 ---
-title: "第一步笔记：Tokenization 与 Embedding"
-date: 2026-09-08 10:00:00 +0800
+title: "1 Tokenization 与 Embedding 笔记"
+date: 2026-10-05 10:07:00 +0800
 categories: [大模型]
 tags: [LLM 基础]
 description: >-
