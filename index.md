@@ -11,6 +11,7 @@ title: Shinjuu
 
 - [大模型基础六步学习路线](/posts/llm-foundations/)
 - [大模型基础综合笔记](/posts/llm-integrated-notes/)
+- [推荐系统基础笔记](/posts/recsys-overview/)
 - [推荐系统论文笔记](/categories/)
 - [算法笔记索引](/posts/algorithm-index/)
 
