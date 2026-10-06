@@ -1,6 +1,6 @@
 ---
-title: "推荐系统基础总览"
-date: 2026-10-06 00:00:00 +0800
+title: "0 推荐系统基础总览"
+date: 2026-10-06 00:09:00 +0800
 categories: [推荐系统]
 tags: [推荐系统基础]
 description: >-
@@ -10,14 +10,14 @@ math: true
 
 ## 分篇笔记
 
-- [推荐系统基础](/posts/recsys-basics/)
-- [召回](/posts/recsys-retrieval/)
-- [排序](/posts/recsys-ranking/)
-- [特征交叉](/posts/recsys-feature-crossing/)
-- [用户行为序列](/posts/recsys-user-behavior-sequence/)
-- [重排](/posts/recsys-reranking/)
-- [物品冷启动](/posts/recsys-item-cold-start/)
-- [改进指标](/posts/recsys-improve-metrics/)
+- [1 推荐系统基础](/posts/recsys-basics/)
+- [2 召回](/posts/recsys-retrieval/)
+- [3 排序](/posts/recsys-ranking/)
+- [4 特征交叉](/posts/recsys-feature-crossing/)
+- [5 用户行为序列](/posts/recsys-user-behavior-sequence/)
+- [6 重排](/posts/recsys-reranking/)
+- [7 物品冷启动](/posts/recsys-item-cold-start/)
+- [8 改进指标](/posts/recsys-improve-metrics/)
 
 这篇是我整理推荐系统基础时的总览，方便回看各环节的作用。细节放在后面的分篇笔记中。
 

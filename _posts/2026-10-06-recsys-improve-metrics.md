@@ -1,6 +1,6 @@
 ---
-title: "八、涨指标的方法（Improving Metrics）笔记"
-date: 2026-10-06 00:00:00 +0800
+title: "8 涨指标的方法（Improving Metrics）笔记"
+date: 2026-10-06 00:01:00 +0800
 categories: [推荐系统]
 tags: [推荐系统基础]
 description: >-

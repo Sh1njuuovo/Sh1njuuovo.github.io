@@ -1,6 +1,6 @@
 ---
-title: "六、重排（Reranking）笔记"
-date: 2026-10-06 00:00:00 +0800
+title: "6 重排（Reranking）笔记"
+date: 2026-10-06 00:03:00 +0800
 categories: [推荐系统]
 tags: [推荐系统基础]
 description: >-

@@ -1,6 +1,6 @@
 ---
-title: "五、用户行为序列建模（User Behavior Sequence）笔记"
-date: 2026-10-06 00:00:00 +0800
+title: "5 用户行为序列建模（User Behavior Sequence）笔记"
+date: 2026-10-06 00:04:00 +0800
 categories: [推荐系统]
 tags: [推荐系统基础]
 description: >-

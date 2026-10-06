@@ -1,6 +1,6 @@
 ---
-title: "三、排序（Ranking）笔记"
-date: 2026-10-06 00:00:00 +0800
+title: "3 排序（Ranking）笔记"
+date: 2026-10-06 00:06:00 +0800
 categories: [推荐系统]
 tags: [推荐系统基础]
 description: >-

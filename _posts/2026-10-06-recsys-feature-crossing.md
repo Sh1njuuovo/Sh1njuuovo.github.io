@@ -1,6 +1,6 @@
 ---
-title: "四、特征交叉（Feature Crossing）笔记"
-date: 2026-10-06 00:00:00 +0800
+title: "4 特征交叉（Feature Crossing）笔记"
+date: 2026-10-06 00:05:00 +0800
 categories: [推荐系统]
 tags: [推荐系统基础]
 description: >-
