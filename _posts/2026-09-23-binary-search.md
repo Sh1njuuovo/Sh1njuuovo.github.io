@@ -116,6 +116,14 @@ return left
 
 ### 35. 搜索插入位置
 
+**题干**
+
+给定严格递增的整数数组和目标值。找到目标时返回下标；不存在时返回它按顺序插入后应处的下标。要求 `O(log n)` 时间。
+
+**示例**
+
+`nums = [1,3,5,6]`，`target = 2`，返回 `1`。
+
 ```python
 def searchInsert(nums, target):
     left, right = 0, len(nums)
@@ -135,6 +143,14 @@ def searchInsert(nums, target):
 - 易错：`right` 写成 `len(nums) - 1` 或者循环条件写成 `left <= right`，这两个必须配套，改一个忘一个就会错
 
 ### 74. 搜索二维矩阵
+
+**题干**
+
+给定矩阵和目标值，判断目标是否存在。每行按非递减顺序排列，每行第一个元素严格大于上一行最后一个元素。要求 `O(log(mn))` 时间。
+
+**示例**
+
+`matrix = [[1,3,5],[7,9,11]]`，`target = 7`，返回 `True`。
 
 ```python
 def searchMatrix(matrix, target):
@@ -162,6 +178,14 @@ def searchMatrix(matrix, target):
 
 ### 34. 在排序数组中查找元素的第一个和最后一个位置
 
+**题干**
+
+给定非递减排序的整数数组和目标值，返回目标第一次和最后一次出现的下标。不存在时返回 `[-1,-1]`，要求 `O(log n)` 时间。
+
+**示例**
+
+`nums = [5,7,7,8,8,10]`，`target = 8`，返回 `[3,4]`。
+
 ```python
 def searchRange(nums, target):
     def lower(x):
@@ -188,6 +212,14 @@ def searchRange(nums, target):
 - Python 里也有现成的 `bisect_left` 和 `bisect_right`，`bisect_left` 就是 `lower`，用 `bisect_right` 减一也能拿到右边界。考试或者面试里手写更稳，也更能说明思路
 
 ### 33. 搜索旋转排序数组
+
+**题干**
+
+严格递增数组在某个位置旋转后得到 `nums`，元素互不相同。给定目标值，返回它的下标，不存在时返回 `-1`。要求 `O(log n)` 时间。
+
+**示例**
+
+`nums = [4,5,6,7,0,1,2]`，`target = 0`，返回 `4`。
 
 ```python
 def search(nums, target):
@@ -220,6 +252,14 @@ def search(nums, target):
 
 ### 153. 寻找旋转数组中的最小值
 
+**题干**
+
+给定由严格递增数组旋转得到的非空数组，元素互不相同，求其中最小值。数组也可能保持原顺序，要求 `O(log n)` 时间。
+
+**示例**
+
+`[3,4,5,1,2]` 返回 `1`。
+
 ```python
 def findMin(nums):
     left, right = 0, len(nums) - 1
@@ -240,6 +280,14 @@ def findMin(nums):
 - 易错：循环条件写成 `left <= right` 会死循环；`right = mid` 写成 `right = mid - 1` 会把最小值跳过去
 
 ### 4. 寻找两个正序数组的中位数
+
+**题干**
+
+给定两个升序数组，长度分别为 `m`、`n`，总长度至少为 `1`。返回合并后的中位数。总长度为偶数时取中间两个数的平均值，要求 `O(log(m+n))` 时间。
+
+**示例**
+
+`nums1 = [1,2]`，`nums2 = [3,4]`，返回 `2.5`。
 
 ```python
 def findMedianSortedArrays(nums1, nums2):

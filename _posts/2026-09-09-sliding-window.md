@@ -56,6 +56,14 @@ if window[s[left]] == 0:
 
 ### 3. 无重复字符的最长子串 —— 变长窗口
 
+**题干**
+
+给定字符串 `s`，返回不含重复字符的最长连续子串长度。子串必须连续。
+
+**示例**
+
+`"abcabcbb"` 的最长无重复子串可以是 `"abc"`，返回 `3`。
+
 ```python
 def length_of_longest_substring(s):
     seen = set()
@@ -75,6 +83,14 @@ def length_of_longest_substring(s):
 - 进阶：用 dict 存「字符最后出现位置」，left 直接跳到 `last[ch] + 1`，但要判断 `last[ch] >= left` 防止跳到窗口外
 
 ### 438. 找到字符串中所有字母异位词 —— 定长窗口
+
+**题干**
+
+给定字符串 `s` 和 `p`，找出 `s` 中所有与 `p` 互为字母异位词的连续子串，返回它们的起始下标。结果顺序不限。
+
+**示例**
+
+`s = "cbaebabacd"`，`p = "abc"`，返回 `[0,6]`。
 
 ```python
 def find_anagrams(s, p):
