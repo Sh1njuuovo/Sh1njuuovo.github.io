@@ -395,36 +395,39 @@ def swapPairs(head):
 
 ```python
 def reverseKGroup(head, k):
-    dummy = ListNode(0, head)
-    group_prev = dummy
+    n = 0
+    cur = head
+    while cur:
+        n += 1
+        cur = cur.next
 
-    while True:
-        # 先看后面还有没有 k 个节点
-        kth = group_prev
-        for _ in range(k):
-            kth = kth.next
-            if not kth:
-                return dummy.next
+    p0 = dummy = ListNode(next=head)
+    pre = None
+    cur = p0.next
 
-        group_next = kth.next
+    while n >= k:
+        n -= k
 
-        # 翻转 group_prev.next 到 kth 这一段
-        prev, cur = group_next, group_prev.next
         for _ in range(k):
             nxt = cur.next
-            cur.next = prev
-            prev = cur
+            cur.next = pre
+            pre = cur
             cur = nxt
 
-        new_group_prev = group_prev.next
-        group_prev.next = kth
-        group_prev = new_group_prev
+        nxt = p0.next
+        nxt.next = cur
+        p0.next = pre
+        p0 = nxt
+
+    return dummy.next
 ```
 
-- 三步循环，先数够不够 k 个，再翻转，最后接回去
-- 翻转前把 `prev` 设成 `group_next`，这样翻转完这一段直接接到后面
-- 易错：`new_group_prev` 必须在 `group_prev.next = kth` 之前取，改完就找不到了
-- 不足 k 个的那一段保持原样，所以数不够时直接返回
+- 先遍历一次统计节点数 `n`，只有剩余节点数至少为 `k` 时才反转一组
+- `p0` 指向当前组的前一个节点，`cur` 指向待反转节点。组内用 `pre`、`cur`、`nxt` 完成三指针反转
+- 反转后，`pre` 是这一组的新头，原来的组头 `p0.next` 变成组尾。先用 `nxt` 保存这个组尾，再让它连接 `cur`，然后让 `p0` 连接 `pre`
+- 最后令 `p0 = nxt`，从新的组尾继续处理下一组。不足 `k` 个的尾部保持原顺序
+- 这版在组间保留 `pre`，反转过程中可能暂时形成环，但接回时 `nxt.next = cur` 会修正组尾的连接。这一步必须在移动 `p0` 前完成
+- 时间复杂度为 `O(n)`，额外空间为 `O(1)`
 
 ### 138. 随机链表的复制（暂未做）
 
