@@ -527,35 +527,35 @@ def merge(list1, list2):
 
 ```python
 def mergeKLists(lists):
-    if not lists:
+    m = len(lists)
+    if m == 0:
         return None
+    if m == 1:
+        return lists[0]
+    left = mergeKLists(lists[:m // 2])
+    right = mergeKLists(lists[m // 2:])
+    return mergeTwoLists(left, right)
 
-    def merge(a, b):
-        dummy = ListNode()
-        cur = dummy
-        while a and b:
-            if a.val <= b.val:
-                cur.next = a
-                a = a.next
-            else:
-                cur.next = b
-                b = b.next
-            cur = cur.next
-        cur.next = a if a else b
-        return dummy.next
 
-    def divide(lo, hi):
-        if lo == hi:
-            return lists[lo]
-        mid = (lo + hi) // 2
-        return merge(divide(lo, mid), divide(mid + 1, hi))
-
-    return divide(0, len(lists) - 1)
+def mergeTwoLists(list1, list2):
+    cur = dummy = ListNode()  # 用哨兵节点简化代码逻辑
+    while list1 and list2:
+        if list1.val < list2.val:
+            cur.next = list1  # 把 list1 加到新链表中
+            list1 = list1.next
+        else:  # 相等时连接任意一侧的节点都可以
+            cur.next = list2  # 把 list2 加到新链表中
+            list2 = list2.next
+        cur = cur.next
+    cur.next = list1 if list1 else list2  # 拼接剩余链表
+    return dummy.next
 ```
 
-- 分治合并，总时间 O(N log k)，`N` 是节点总数，`k` 是链表条数
-- 易错：`lists` 可能是空列表，也可能里面有 `None`，边界要处理
-- 另一种做法是把 `k` 个表头放进小顶堆，每次弹最小的那个，适合 `k` 很大的场景
+- `mergeKLists` 把链表列表从中间分成两半，分别递归合并，再用 `mergeTwoLists` 合并两个结果
+- 没有链表时返回 `None`，只有一条时直接返回它。列表中的链表也可能是 `None`
+- `mergeTwoLists` 每次连接值较小的节点，一条链表耗尽后直接连接另一条的剩余部分
+- 设 `N` 为节点总数，`k` 为链表条数。合并节点耗时 `O(N log k)`，切片另需 `O(k log k)` 时间
+- 切片会复制列表中的节点引用，不会复制链表节点。切片的峰值额外空间为 `O(k)`，递归栈为 `O(log k)`，所以总额外空间为 `O(k)`
 
 ### 146. LRU 缓存 —— 哈希表 + 双向链表
 
@@ -651,7 +651,7 @@ class LRUCache:
 | 24 | O(n) | O(1) |
 | 25 | O(n) | O(1) |
 | 148 | O(n log n) | O(log n) |
-| 23 | O(N log k) | O(log k) |
+| 23 | O((N + k) log k) | O(k) |
 | 146 | O(1) 每次操作 | O(capacity) |
 
 ## 共同规律
