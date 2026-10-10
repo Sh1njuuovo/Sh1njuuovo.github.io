@@ -477,40 +477,43 @@ def copyRandomList(head):
 
 ```python
 def sortList(head):
-    if not head or not head.next:
+    if head is None or head.next is None:
         return head
+    head2 = middleNode(head)
+    head = sortList(head)
+    head2 = sortList(head2)
+    return merge(head, head2)
 
-    # 快慢指针找中点，断开成两段
-    slow, fast = head, head.next
+
+def middleNode(head):
+    slow = fast = head
     while fast and fast.next:
+        pre = slow
         slow = slow.next
         fast = fast.next.next
-    mid = slow.next
-    slow.next = None
-
-    left = sortList(head)
-    right = sortList(mid)
-    return merge(left, right)
+    pre.next = None
+    return slow
 
 
-def merge(a, b):
-    dummy = ListNode()
-    cur = dummy
-    while a and b:
-        if a.val <= b.val:
-            cur.next = a
-            a = a.next
+def merge(list1, list2):
+    cur = dummy = ListNode()
+    while list1 and list2:
+        if list1.val < list2.val:
+            cur.next = list1
+            list1 = list1.next
         else:
-            cur.next = b
-            b = b.next
+            cur.next = list2
+            list2 = list2.next
         cur = cur.next
-    cur.next = a if a else b
+    cur.next = list1 if list1 else list2
     return dummy.next
 ```
 
-- 快慢指针初始化成 `head` 和 `head.next`，这样偶数长度时中点偏左，两段长度差不超过 1
-- 断开那一步 `slow.next = None` 必须写，否则递归不会终止
-- 递归深度是 O(log n)，不会碰到 Python 的递归上限
+- `sortList` 先处理空链表和单节点，再把链表拆成两段，分别递归排序，最后合并
+- `middleNode` 用快慢指针找第二段的头节点 `slow`，用 `pre` 保存它前面的节点，再通过 `pre.next = None` 断开两段
+- `middleNode` 只在链表至少有两个节点时调用，所以 `pre` 会在循环中得到赋值。断开操作必须在递归排序前完成
+- `merge` 每次连接两段中值较小的节点，一段耗尽后直接连接另一段剩余的节点
+- 时间复杂度为 `O(n log n)`，递归栈占用 `O(log n)` 额外空间。进阶的常数空间要求可用自底向上的迭代归并实现
 
 ### 23. 合并 K 个升序链表 —— 两两合并
 
