@@ -557,7 +557,7 @@ def mergeTwoLists(list1, list2):
 - 设 `N` 为节点总数，`k` 为链表条数。合并节点耗时 `O(N log k)`，切片另需 `O(k log k)` 时间
 - 切片会复制列表中的节点引用，不会复制链表节点。切片的峰值额外空间为 `O(k)`，递归栈为 `O(log k)`，所以总额外空间为 `O(k)`
 
-### 146. LRU 缓存 —— 哈希表 + 双向链表
+### 146. LRU 缓存 —— OrderedDict
 
 **题干**
 
@@ -568,62 +568,32 @@ def mergeTwoLists(list1, list2):
 容量为 `2`，先写入键 `1,2`，再读取键 `1`，随后写入键 `3`，此时键 `2` 被淘汰，`get(2)` 返回 `-1`。
 
 ```python
-class Node:
-    def __init__(self, key=0, val=0):
-        self.key = key
-        self.val = val
-        self.prev = None
-        self.next = None
+from collections import OrderedDict
 
 
 class LRUCache:
     def __init__(self, capacity):
-        self.cap = capacity
-        self.cache = {}
-        self.head = Node()          # 哨兵，head.next 是最近使用的
-        self.tail = Node()          # 哨兵，tail.prev 是最久未使用的
-        self.head.next = self.tail
-        self.tail.prev = self.head
-
-    def _remove(self, node):
-        node.prev.next = node.next
-        node.next.prev = node.prev
-
-    def _add_to_front(self, node):
-        node.next = self.head.next
-        node.prev = self.head
-        self.head.next.prev = node
-        self.head.next = node
+        self.capacity = capacity
+        self.cache = OrderedDict()
 
     def get(self, key):
         if key not in self.cache:
             return -1
-        node = self.cache[key]
-        self._remove(node)
-        self._add_to_front(node)
-        return node.val
+        self.cache.move_to_end(key, last=False)
+        return self.cache[key]
 
     def put(self, key, value):
-        if key in self.cache:
-            node = self.cache[key]
-            node.val = value
-            self._remove(node)
-            self._add_to_front(node)
-        else:
-            if len(self.cache) >= self.cap:
-                lru = self.tail.prev
-                self._remove(lru)
-                del self.cache[lru.key]
-            node = Node(key, value)
-            self.cache[key] = node
-            self._add_to_front(node)
+        self.cache[key] = value
+        self.cache.move_to_end(key, last=False)
+        if len(self.cache) > self.capacity:
+            self.cache.popitem()
 ```
 
-- 哈希表负责 O(1) 找到节点，双向链表负责维护使用顺序
-- 两个哨兵让「链表为空」和「删的是头或尾」都不用特判
-- 节点里必须存 `key`，淘汰时要用它去删哈希表里的那一项
-- 易错：`get` 命中之后也要把节点移到头部，因为访问算作使用
-- 易错：容量为 1 时先删再加，顺序反了会把刚放进去的节点删掉
+- `OrderedDict` 保存键值和使用顺序。最左端是最近使用的键，最右端是最久未使用的键
+- `get` 命中后，用 `move_to_end(key, last=False)` 把键移到最左端，再返回它的值。未命中时返回 `-1`
+- `put` 先写入或更新键值，再把键移到最左端。超过容量时，`popitem()` 默认删除最右端的键值对
+- `get` 和更新已有键的 `put` 都会刷新使用顺序。`move_to_end` 和 `popitem` 的两端必须保持一致
+- `OrderedDict` 在类外导入，供方法直接使用。每次操作平均耗时 `O(1)`，空间为 `O(capacity)`
 
 ## 题目分类
 
