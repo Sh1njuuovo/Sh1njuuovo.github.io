@@ -433,22 +433,22 @@ def rightSideView(root):
 
 ```python
 def kthSmallest(root, k):
-    stack, cur = [], root
-    while cur or stack:
-        while cur:
-            stack.append(cur)
-            cur = cur.left
-        cur = stack.pop()
-        k -= 1
-        if k == 0:
-            return cur.val
-        cur = cur.right
+    vals = []
+
+    def inorder(node):
+        if not node:
+            return
+        inorder(node.left)
+        vals.append(node.val)
+        inorder(node.right)
+
+    inorder(root)
+    return vals[k - 1]
 ```
 
-- BST 的中序严格递增，第 k 小就是中序序列的第 k 个
-- 数到第 k 个立刻返回，不需要遍历完整棵树
-- 易错：`k` 从 1 开始计数；`k -= 1` 要在弹出之后立刻做
-- 进阶：如果树频繁增删，可以在每个节点记录子树大小，查询降到 O(h)
+- BST 的中序遍历按左子树、当前节点、右子树的顺序访问，得到严格递增的节点值序列
+- 用 `vals` 保存完整的中序结果，再返回 `vals[k - 1]`。`k` 从 `1` 开始计数，列表下标从 `0` 开始
+- 这版会遍历整棵树。时间复杂度为 `O(n)`，列表占用 `O(n)` 空间，递归栈占用 `O(h)` 空间，总额外空间为 `O(n)`，`h` 是树高
 
 ### 104. 二叉树的最大深度 —— 形状三
 
@@ -707,7 +707,7 @@ def sortedArrayToBST(nums):
 | 94 中序遍历 | 二遍历，收集 | O(n) | O(h) |
 | 102 层序遍历 | 二遍历，收集 | O(n) | O(w) |
 | 199 右视图 | 二遍历，收集 | O(n) | O(w) |
-| 230 第 K 小 | 二遍历，收集中途停 | O(h + k) | O(h) |
+| 230 第 K 小 | 二遍历，收集完整中序序列 | O(n) | O(n) |
 | 104 最大深度 | 三自底向上 | O(n) | O(h) |
 | 101 对称二叉树 | 三自底向上，双树 | O(n) | O(h) |
 | 236 最近公共祖先 | 三自底向上 | O(n) | O(h) |
