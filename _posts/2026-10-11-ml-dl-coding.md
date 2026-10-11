@@ -3,6 +3,7 @@ title: "机器学习与深度学习手撕模板"
 date: 2026-10-11 00:00:00 +0800
 categories: [算法, 机器学习与深度学习]
 tags: [算法手撕, PyTorch]
+math: true
 description: >-
   10 个带注释的手撕模板，涵盖 Attention、归一化、损失函数、AUC 与 RoPE，说明输入形状和实现边界。
 ---
@@ -51,8 +52,18 @@ import torch.nn.functional as F
 ## 十个手撕模板
 
 ### 1. Softmax
-
+1
 输入浮点张量，沿最后一维计算概率。输出形状不变，每一行的概率和为 `1`。
+
+**数学公式**
+
+对最后一维的分数向量 $x$，令 $m=\max_j x_j$：
+
+$$
+p_i=\frac{e^{x_i-m}}{\sum_{j=1}^{C}e^{x_j-m}}.
+$$
+
+$C$ 是这一维的长度。减去同一个最大值不改变概率，且能减小指数运算的数值范围。
 
 ```python
 def softmax(x):
@@ -66,8 +77,20 @@ def softmax(x):
 要点是减最大值和 `keepdim=True`。这里假设输入是有限的浮点数。
 
 ### 2. 交叉熵损失
-
+2
 `logits` 是未经过 Softmax 的分数，形状 `[B, C]`。`labels` 是真实类别下标，形状 `[B]`，类型为 `torch.long`，与 logits 在同一设备上。输出为一个平均损失。
+
+**数学公式**
+
+第 $b$ 个样本的分数为 $z_{b,c}$，真实类别为 $y_b$。令 $m_b=\max_c z_{b,c}$：
+
+$$
+\log p_{b,c}=(z_{b,c}-m_b)-\log\sum_{j=1}^{C}e^{z_{b,j}-m_b},
+\qquad
+\mathcal L=-\frac{1}{B}\sum_{b=1}^{B}\log p_{b,y_b}.
+$$
+
+$B$ 是样本数，$C$ 是类别数。代码取真实类别对应的对数概率，再取负值和平均。
 
 ```python
 def cross_entropy(logits, labels):
@@ -84,8 +107,25 @@ def cross_entropy(logits, labels):
 这版把 LogSoftmax 展开，方便手写解释。实际调用可用 `F.cross_entropy(logits, labels)`。不要先对 logits 做 Softmax 再传给它。
 
 ### 3. Self-Attention
-
+3
 输入 `x` 的形状为 `[B, L, D]`，输出同样是 `[B, L, D]`。这个版本包含 QKV 投影，不包含 Mask、Dropout 和额外输出投影。
+
+**数学公式**
+
+令输入 $X\in\mathbb R^{B\times L\times D}$。省略批次下标，线性投影为：
+
+$$
+Q=XW_Q+b_Q,\qquad K=XW_K+b_K,\qquad V=XW_V+b_V.
+$$
+
+注意力计算为：
+
+$$
+A=\operatorname{softmax}_{\mathrm{key}}\left(\frac{QK^\top}{\sqrt{d_k}}+M\right),
+\qquad Y=AV.
+$$
+
+$d_k$ 是 Q 和 K 的特征维度。基础代码不使用 Mask，相当于 $M=0$。因果 Mask 在允许访问的位置取 $0$，未来位置取 $-\infty$。Softmax 对每个 Query 对应的 Key 分数归一化。
 
 ```python
 class SelfAttention(nn.Module):
@@ -131,8 +171,26 @@ weights = torch.softmax(scores, dim=-1)
 每个 Query 至少要保留一个有效 Key，整行都被屏蔽时 Softmax 会产生 NaN。
 
 ### 4. Multi-Head Attention
-
+4
 输入输出均为 `[B, L, D]`，`D` 必须能被头数 `H` 整除。每个头的维度是 `d = D // H`。
+
+**数学公式**
+
+设头数为 $H$，每个头的维度为 $d=D/H$。省略批次下标，第 $h$ 个头的计算为：
+
+$$
+Q_h=XW_h^Q+b_h^Q,\quad K_h=XW_h^K+b_h^K,\quad V_h=XW_h^V+b_h^V,
+$$
+
+$$
+\mathrm{head}_h=\operatorname{softmax}_{\mathrm{key}}\left(\frac{Q_hK_h^\top}{\sqrt d}\right)V_h,
+$$
+
+$$
+Y=\operatorname{Concat}(\mathrm{head}_1,\ldots,\mathrm{head}_H)W_O+b_O.
+$$
+
+每个头输出 $L\times d$，拼接后得到 $L\times D$。代码用一次线性投影生成全部 QKV，再通过形状变换分头，最后进行输出投影。
 
 ```python
 class MHA(nn.Module):
@@ -165,8 +223,24 @@ class MHA(nn.Module):
 缩放使用每个头的维度 `self.d`。这里省略 Mask 和 Dropout；转置后使用 `reshape` 合并维度。
 
 ### 5. LayerNorm
-
+5
 沿最后一维计算均值和方差，输出形状不变。
+
+**数学公式**
+
+对一个 token 的 $D$ 维特征向量 $x$：
+
+$$
+\mu=\frac{1}{D}\sum_{j=1}^{D}x_j,\qquad
+\sigma^2=\frac{1}{D}\sum_{j=1}^{D}(x_j-\mu)^2,
+$$
+
+$$
+\hat x_i=\frac{x_i-\mu}{\sqrt{\sigma^2+\varepsilon}},\qquad
+y_i=\gamma_i\hat x_i+\beta_i.
+$$
+
+代码返回 $\hat x$，省略了可学习的 $\gamma$ 和 $\beta$。方差分母是 $D$，对应 `unbiased=False`，$\varepsilon$ 用于避免除零。
 
 ```python
 def layer_norm(x, eps=1e-5):
@@ -179,8 +253,19 @@ def layer_norm(x, eps=1e-5):
 这版省略可学习参数 `gamma` 和 `beta`。完整形式是在结果上乘 `gamma`，再加 `beta`。
 
 ### 6. RMSNorm
-
+6
 沿最后一维计算平方均值，不减均值，输出形状不变。
+
+**数学公式**
+
+对最后一维的 $D$ 个特征：
+
+$$
+r=\sqrt{\frac{1}{D}\sum_{j=1}^{D}x_j^2+\varepsilon},\qquad
+\hat x_i=\frac{x_i}{r},\qquad y_i=\gamma_i\hat x_i.
+$$
+
+代码返回 $\hat x$，省略可学习的缩放参数 $\gamma$。与 LayerNorm 相比，这里直接用平方均值，不减去均值。
 
 ```python
 def rms_norm(x, eps=1e-6):
@@ -191,8 +276,19 @@ def rms_norm(x, eps=1e-6):
 这版省略可学习的缩放参数。混合精度训练中可以用 float32 计算平方均值，再转回原类型。
 
 ### 7. AUC
-
+7
 `scores` 和 `labels` 都是一维张量，长度相同。标签为 `0` 或 `1`，分数越大表示越倾向正类。
+
+**数学公式**
+
+设正样本分数为 $s_i^+$，负样本分数为 $s_j^-$，数量分别为 $N_+$ 和 $N_-$：
+
+$$
+\mathrm{AUC}=\frac{1}{N_+N_-}\sum_{i=1}^{N_+}\sum_{j=1}^{N_-}
+\left[\mathbf 1(s_i^+>s_j^-)+\frac12\mathbf 1(s_i^+=s_j^-)\right].
+$$
+
+$\mathbf 1(\cdot)$ 表示条件成立时取 $1$，否则取 $0$。正样本分数更高计 $1$，同分计 $0.5$。缺少正样本或负样本时分母为零，因此代码返回 NaN。
 
 ```python
 def auc(scores, labels):
@@ -212,8 +308,27 @@ def auc(scores, labels):
 这是便于手写的两两比较版本。时间和额外空间都是 `O(N_pos * N_neg)`。大样本可改用排序与秩统计，把时间降到 `O(N log N)`，同分需要取平均秩。
 
 ### 8. InfoNCE Loss
-
+8
 `q` 和 `k` 的形状为 `[B, D]`。同下标是一对正样本，其他列作为负样本，温度必须大于 `0`。
+
+**数学公式**
+
+先对向量做 L2 归一化，再计算相似度：
+
+$$
+\hat q_i=\frac{q_i}{\max(\lVert q_i\rVert_2,\varepsilon)},\qquad
+\hat k_j=\frac{k_j}{\max(\lVert k_j\rVert_2,\varepsilon)},\qquad
+z_{ij}=\frac{\hat q_i^\top\hat k_j}{\tau}.
+$$
+
+同下标 $(q_i,k_i)$ 是正样本，单向 batch 内负样本损失为：
+
+$$
+\mathcal L=-\frac{1}{B}\sum_{i=1}^{B}
+\log\frac{e^{z_{ii}}}{\sum_{j=1}^{B}e^{z_{ij}}}.
+$$
+
+$\tau>0$ 是温度。每行都把对角线位置当作真实类别，对应代码的 `labels = arange(B)`。归一化分母的保护对应 `F.normalize` 的 `eps`。
 
 ```python
 def info_nce(q, k, temperature=0.1):
@@ -230,8 +345,20 @@ def info_nce(q, k, temperature=0.1):
 这是单向、batch 内负样本版本，假设其他下标的样本都可作为负样本。双向版本可以再计算反方向损失，最后取平均。
 
 ### 9. BPR Loss
-
+9
 `pos_score` 和 `neg_score` 是配对的正负样本分数，形状相同。输出平均损失。
+
+**数学公式**
+
+设第 $i$ 对正负样本分数为 $s_i^+$ 和 $s_i^-$，分数差为 $\Delta_i=s_i^+-s_i^-$：
+
+$$
+\sigma(t)=\frac{1}{1+e^{-t}},\qquad
+\mathcal L=-\frac{1}{N}\sum_{i=1}^{N}\log\sigma(\Delta_i)
+=\frac{1}{N}\sum_{i=1}^{N}\log(1+e^{-\Delta_i}).
+$$
+
+$N$ 是配对数量。正样本分数比负样本越高，损失越小。代码使用数值稳定的 `logsigmoid`，没有加入正则项。
 
 ```python
 def bpr_loss(pos_score, neg_score):
@@ -243,8 +370,30 @@ def bpr_loss(pos_score, neg_score):
 目标是让正样本分数高于负样本。这里不包含模型参数的正则项。
 
 ### 10. RoPE
-
+10
 输入浮点张量 `x`，形状 `[B, L, D]`，`D` 为偶数。输出形状不变，位置从 `0` 开始。
+
+**数学公式**
+
+采用从 $0$ 开始的下标。位置为 $p$，相邻维度对的编号为 $j=0,\ldots,D/2-1$：
+
+$$
+\omega_j=10000^{-2j/D},\qquad \theta_{p,j}=p\omega_j.
+$$
+
+对相邻两个特征进行二维旋转：
+
+$$
+\begin{pmatrix}y_{p,2j}\\y_{p,2j+1}\end{pmatrix}
+=
+\begin{pmatrix}
+\cos\theta_{p,j}&-\sin\theta_{p,j}\\
+\sin\theta_{p,j}&\cos\theta_{p,j}
+\end{pmatrix}
+\begin{pmatrix}x_{p,2j}\\x_{p,2j+1}\end{pmatrix}.
+$$
+
+代码的 `a`、`b` 分别对应偶数和奇数维度。位置 $p=0$ 时旋转角为零，输出不变。旋转保留每对特征的平方和。
 
 ```python
 def rope(x):
