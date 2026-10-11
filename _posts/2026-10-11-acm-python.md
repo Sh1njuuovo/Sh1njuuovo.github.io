@@ -1,7 +1,7 @@
 ---
 title: "Python ACM 输入输出与 Hot 100 例题"
 date: 2026-10-11 00:00:00 +0800
-categories: [算法]
+categories: [算法, 数据结构与算法]
 tags: ["LeetCode Hot 100", "ACM 输入输出", Python]
 description: >-
   只用 input() 和 print()，整理最常用的 ACM 读写方式和九个完整程序。

@@ -1,7 +1,7 @@
 ---
 title: "回溯（Backtracking）"
 date: 2026-09-22 21:58:27 +0800
-categories: [算法]
+categories: [算法, 数据结构与算法]
 tags: ["LeetCode Hot 100"]
 description: >-
   回溯就是系统地穷举所有可能的解。代码形状是深度优先搜索，区别在于每走一步都要能退回来。整套模板的核心只有三行，做选择、递归、撤销选择。

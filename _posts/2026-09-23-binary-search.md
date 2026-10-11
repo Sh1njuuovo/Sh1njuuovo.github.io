@@ -1,7 +1,7 @@
 ---
 title: "二分查找（Binary Search）"
 date: 2026-09-23 13:19:00 +0800
-categories: [算法]
+categories: [算法, 数据结构与算法]
 tags: ["LeetCode Hot 100"]
 description: >-
   二分查找在有序区间里每次丢掉一半，把 O(n) 的线性扫描压到 O(log n)。核心动作只有一个，每轮看中间那个值，根据它和目标的大小关系，判断答案在左半边还是右半边，然后把这个范围缩掉一半。
