@@ -4,7 +4,7 @@ date: 2026-10-11 00:00:00 +0800
 categories: [算法]
 tags: ["LeetCode Hot 100", "ACM 输入输出", Python]
 description: >-
-  从核心函数到完整程序，整理单组、多组、EOF 输入，以及数组、矩阵、链表、二叉树和操作序列的九个可运行例子。
+  只用 input() 和 print()，整理最常用的 ACM 读写方式和九个完整程序。
 ---
 LeetCode 通常替你构造参数并调用核心函数。ACM 格式需要自己读取标准输入、构造参数、调用算法，并把结果写到标准输出。算法主体通常可以保留，主要补上程序入口和输入输出处理。
 
@@ -12,54 +12,51 @@ LeetCode 通常替你构造参数并调用核心函数。ACM 格式需要自己�
 
 本文使用 Python 3。下面为 Hot 100 代表题自定义了输入输出约定，用来练习完整程序；实际提交时请按题面的格式调整。
 
-## 完整程序由哪些部分组成
+## 记住这一套就够了
 
-1. 导入用到的标准库。
-2. 定义核心函数，链表和二叉树题还需要定义节点。
-3. 在 `main()` 中读取输入，构造函数参数，调用算法并输出结果。
-4. 用 `if __name__ == "__main__":` 调用 `main()`。
+读入用 `input()`，输出用 `print()`。先定义核心函数，再在文件末尾读入参数、调用函数、打印结果，不必额外写 `main()`。
 
-普通函数不需要 `self`。从 `Solution` 类中取出核心方法时，将 `self.helper(...)` 改为普通函数调用。如果题目要求多次操作同一对象，例如 LRU 缓存，就保留类。
+```python
+n = int(input())                         # 一个整数
+n, k = map(int, input().split())          # 一行多个整数
+nums = list(map(int, input().split()))    # 一行整数数组
+s = input()                              # 一行字符串
+matrix = [list(map(int, input().split())) for _ in range(n)]
 
-输入中的数组通常是空格分隔的数字，不带 Python 的方括号。不要用 `eval()` 解析输入。题目如果明确采用 JSON，可以用 `json.loads()`。
+print(ans)                               # 一个答案
+print(*nums)                             # 数组，空格分隔
+for row in matrix:
+    print(*row)                          # 矩阵，每行一次输出
+```
 
-## 先判断输入属于哪一种
+这些是独立的常用写法，按题目选择需要的几行。`input()` 自动去掉行末换行，但保留字符串中的空格。`.split()` 按空白拆分，`map(int, ...)` 把每项转成整数，外面的 `list(...)` 得到数组。
 
-| 输入形态 | 读法 | 例子 |
-| --- | --- | --- |
-| 单组数字和数组 | 按空白读取，按长度取元素 | 1 两数之和 |
-| 首行给测试组数 | 读取 `T` 后处理恰好 `T` 组 | 53 最大子数组和 |
-| 没有组数，读到 EOF | 遍历输入行或按格式取完整一组 | 70 爬楼梯 |
-| 完整字符串 | 读一行，仅去除换行 | 3 最长无重复子串 |
-| 二维矩阵 | 读取行列数，再构造每行 | 54 螺旋矩阵 |
-| 链表 | 读取节点值后建链表 | 206 反转链表 |
-| 二叉树 | 读取层序序列，处理 `null` | 102 层序遍历 |
-| 图的边列表 | 读取节点数、边数和每条边 | 207 课程表 |
-| 操作序列 | 创建对象后逐行执行命令 | 146 LRU 缓存 |
+### 多组输入
 
-## 输入输出常用写法
+首行给出组数时：
 
-### 按行读取和按空白读取
+```python
+T = int(input())
+for _ in range(T):
+    n = int(input())
+    nums = list(map(int, input().split()))
+    # 这里计算并 print 答案
+```
 
-`sys.stdin.readline()` 保留一行的边界，适合字符串或每行一条命令。读到 EOF 时返回空字符串 `""`，真正的空行一般是 `"\n"`。
+没有组数，需要读到文件结束时：
 
-`sys.stdin.buffer.read().split()` 一次读取全部输入并按空白拆分，适合题面只关心数字顺序的情况。返回的是 `bytes`，可以直接传给 `int()`。这会把全部输入放进内存，特别大的输入或交互题应按行、按需读取。
+```python
+while True:
+    try:
+        n = int(input())
+    except EOFError:
+        break
+    # 这里计算并 print 答案
+```
 
-`map(int, ...)` 是迭代器。要按下标访问时转成 `list`；按顺序取值时可以用 `next()`。长度 `n` 应控制恰好读取几个元素，不能把后续测试组也当作当前数组。
+每组重新读入和计算。EOF 写法只捕获输入结束，不把数据格式错误当成正常结束。
 
-### 多组输入与 EOF
-
-题面给出 `T` 时，循环恰好 `T` 次。题面要求读到 EOF 时，循环到输入结束。每组的计数器、容器和算法状态要重新初始化。
-
-是否跳过空行由输入约定决定。数字输入通常可以跳过空行，字符串题可能将空行视为长度为零的字符串。不要一律跳过。
-
-### 输出列表、矩阵和布尔结果
-
-`print(*values)` 输出空格分隔的一行元素；不要直接 `print(values)`，除非题目明确要求带方括号的格式。二维结果通常逐行 `print(*row)`。
-
-布尔值按题面转换成 `YES/NO`、`true/false` 或 `1/0`，大小写也需要一致。空结果可能要求空行、`EMPTY` 或 `-1`，本文每题单独约定。
-
-很多行结果可以先转成字符串，最后用 `"\n".join(output)` 一次输出。不要输出提示语、调试信息或函数的 `None` 返回值。
+普通核心函数不需要 `self`。链表和二叉树要先建节点，LRU 这类多次操作同一个对象的题目保留类。数组用 `print(*ans)`，布尔结果按题面打印 `YES` 或 `NO`。不要输出提示语和调试信息。
 
 ## 代表题完整程序
 
@@ -69,7 +66,7 @@ LeetCode 通常替你构造参数并调用核心函数。ACM 格式需要自己�
 
 **输入输出约定**
 
-第一行是数组长度 `n` 和目标值 `target`，后面给出 `n` 个整数。输出两个下标，用空格分隔，下标从 `0` 开始。保证存在唯一答案。
+第一行是数组长度 `n` 和目标值 `target`，第二行给出 `n` 个整数。输出两个下标，用空格分隔，下标从 `0` 开始。保证存在唯一答案。
 
 **样例输入**
 
@@ -87,9 +84,6 @@ LeetCode 通常替你构造参数并调用核心函数。ACM 格式需要自己�
 **完整程序**
 
 ```python
-import sys
-
-
 def two_sum(nums, target):
     seen = {}
     for i, x in enumerate(nums):
@@ -99,18 +93,12 @@ def two_sum(nums, target):
     return []
 
 
-def main():
-    data = list(map(int, sys.stdin.buffer.read().split()))
-    n, target = data[:2]
-    nums = data[2:2 + n]
-    print(*two_sum(nums, target))
-
-
-if __name__ == "__main__":
-    main()
+n, target = map(int, input().split())
+nums = list(map(int, input().split()))
+print(*two_sum(nums, target))
 ```
 
-数组元素可以跨行，按空白拆分后结果相同。`print(*ans)` 输出空格分隔的元素。
+数组放在一行读入，最后直接 `print(*答案)`。
 
 ### 53. 最大子数组和，多组输入
 
@@ -118,7 +106,7 @@ if __name__ == "__main__":
 
 **输入输出约定**
 
-第一个整数是测试组数 `T`。每组先给数组长度 `n`，再给 `n` 个整数。每组输出一个最大和，独占一行，数组非空。
+第一个整数是测试组数 `T`。每组先给数组长度 `n`，下一行给 `n` 个整数。每组输出一个最大和，独占一行，数组非空。
 
 **样例输入**
 
@@ -140,9 +128,6 @@ if __name__ == "__main__":
 **完整程序**
 
 ```python
-import sys
-
-
 def max_subarray(nums):
     current = best = nums[0]
     for x in nums[1:]:
@@ -151,22 +136,14 @@ def max_subarray(nums):
     return best
 
 
-def main():
-    tokens = iter(map(int, sys.stdin.buffer.read().split()))
-    t = next(tokens)
-    output = []
-    for _ in range(t):
-        n = next(tokens)
-        nums = [next(tokens) for _ in range(n)]
-        output.append(str(max_subarray(nums)))
-    sys.stdout.write("\n".join(output) + "\n")
-
-
-if __name__ == "__main__":
-    main()
+T = int(input())
+for _ in range(T):
+    n = int(input())
+    nums = list(map(int, input().split()))
+    print(max_subarray(nums))
 ```
 
-每组都重新创建数组和算法状态。全为负数时答案是最大的负数，所以不能把最大和初始化为 `0`。
+每组读入长度和一行数组，计算后立即输出。
 
 ### 70. 爬楼梯，读到 EOF
 
@@ -195,9 +172,6 @@ if __name__ == "__main__":
 **完整程序**
 
 ```python
-import sys
-
-
 def climb_stairs(n):
     a = b = 1
     for _ in range(n):
@@ -205,22 +179,15 @@ def climb_stairs(n):
     return a
 
 
-def main():
-    output = []
-    for line in sys.stdin:
-        line = line.strip()
-        if not line:
-            continue
-        output.append(str(climb_stairs(int(line))))
-    if output:
-        sys.stdout.write("\n".join(output) + "\n")
-
-
-if __name__ == "__main__":
-    main()
+while True:
+    try:
+        n = int(input())
+    except EOFError:
+        break
+    print(climb_stairs(n))
 ```
 
-这里的空行不是一组数据，可以跳过。读取到 EOF 时循环自然结束，不需要用异常吞掉格式错误。
+每行一个整数，读到 EOF 就结束。
 
 ### 3. 无重复字符的最长子串
 
@@ -245,9 +212,6 @@ abcabcbb
 **完整程序**
 
 ```python
-import sys
-
-
 def length_of_longest_substring(s):
     last = {}
     left = best = 0
@@ -258,16 +222,11 @@ def length_of_longest_substring(s):
     return best
 
 
-def main():
-    s = sys.stdin.readline().rstrip("\r\n")
-    print(length_of_longest_substring(s))
-
-
-if __name__ == "__main__":
-    main()
+s = input()
+print(length_of_longest_substring(s))
 ```
 
-只去掉行末换行。使用 `.strip()` 会删掉首尾空格，使用 `.split()` 会拆散字符串。输入为空行时输出 `0`。
+直接用 `input()`，空字符串和首尾空格都能保留。
 
 ### 54. 螺旋矩阵
 
@@ -275,7 +234,7 @@ if __name__ == "__main__":
 
 **输入输出约定**
 
-前两个整数是行数 `m` 和列数 `n`，接着按行给出 `m * n` 个整数。矩阵非空，输出螺旋顺序，用空格分隔。
+前两个整数是行数 `m` 和列数 `n`，接着每行给出 `n` 个整数，共 `m` 行。矩阵非空，输出螺旋顺序，用空格分隔。
 
 **样例输入**
 
@@ -295,9 +254,6 @@ if __name__ == "__main__":
 **完整程序**
 
 ```python
-import sys
-
-
 def spiralOrder(matrix):
     dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
     m, n = len(matrix), len(matrix[0])
@@ -314,18 +270,12 @@ def spiralOrder(matrix):
     return ans
 
 
-def main():
-    tokens = iter(map(int, sys.stdin.buffer.read().split()))
-    m, n = next(tokens), next(tokens)
-    matrix = [[next(tokens) for _ in range(n)] for _ in range(m)]
-    print(*spiralOrder(matrix))
-
-
-if __name__ == "__main__":
-    main()
+m, n = map(int, input().split())
+matrix = [list(map(int, input().split())) for _ in range(m)]
+print(*spiralOrder(matrix))
 ```
 
-用列表推导式分别创建每一行。这份实现沿用矩阵笔记中的方向数组写法，会将访问过的位置改为 `None`。
+先读行列数，再逐行读矩阵。
 
 ### 206. 反转链表
 
@@ -333,7 +283,7 @@ if __name__ == "__main__":
 
 **输入输出约定**
 
-先给节点数 `n`，再给 `n` 个节点值。输出反转后的节点值，用空格分隔。`n = 0` 表示空链表，输出空行。
+先给节点数 `n`，第二行给 `n` 个节点值，空链表时第二行留空。输出反转后的节点值，用空格分隔。`n = 0` 表示空链表，输出空行。
 
 **样例输入**
 
@@ -351,9 +301,6 @@ if __name__ == "__main__":
 **完整程序**
 
 ```python
-import sys
-
-
 class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
@@ -379,23 +326,17 @@ def reverseList(head):
     return pre
 
 
-def main():
-    data = list(map(int, sys.stdin.buffer.read().split()))
-    n = data[0]
-    head = build_list(data[1:1 + n])
-    head = reverseList(head)
-    output = []
-    while head:
-        output.append(head.val)
-        head = head.next
-    print(*output)
-
-
-if __name__ == "__main__":
-    main()
+n = int(input())
+values = list(map(int, input().split()))
+head = reverseList(build_list(values))
+ans = []
+while head:
+    ans.append(head.val)
+    head = head.next
+print(*ans)
 ```
 
-输入中的数字需要先构造成节点，算法操作节点的 `next`，输出时再沿链表取值。
+读入一行节点值，建链表后调用核心函数，最后输出节点值。
 
 ### 102. 二叉树的层序遍历
 
@@ -422,7 +363,6 @@ if __name__ == "__main__":
 **完整程序**
 
 ```python
-import sys
 from collections import deque
 
 
@@ -471,21 +411,16 @@ def levelOrder(root):
     return ans
 
 
-def main():
-    root = build_tree(sys.stdin.readline().split())
-    levels = levelOrder(root)
-    if not levels:
-        print("EMPTY")
-    else:
-        for level in levels:
-            print(*level)
-
-
-if __name__ == "__main__":
-    main()
+values = input().split()
+levels = levelOrder(build_tree(values))
+if not levels:
+    print("EMPTY")
+else:
+    for level in levels:
+        print(*level)
 ```
 
-这是按队列展开的层序格式。存在缺失节点时，不能直接按数组下标 `2*i+1`、`2*i+2` 连接孩子。例如 `1 null 2 3` 中，`3` 是节点 `2` 的左孩子。
+先把 `null` 层序序列建成树，再逐层输出。
 
 ### 207. 课程表
 
@@ -511,7 +446,6 @@ YES
 **完整程序**
 
 ```python
-import sys
 from collections import deque
 
 
@@ -533,18 +467,12 @@ def canFinish(n, prerequisites):
     return completed == n
 
 
-def main():
-    tokens = iter(map(int, sys.stdin.buffer.read().split()))
-    n, m = next(tokens), next(tokens)
-    prerequisites = [[next(tokens), next(tokens)] for _ in range(m)]
-    print("YES" if canFinish(n, prerequisites) else "NO")
-
-
-if __name__ == "__main__":
-    main()
+n, m = map(int, input().split())
+prerequisites = [list(map(int, input().split())) for _ in range(m)]
+print("YES" if canFinish(n, prerequisites) else "NO")
 ```
 
-核心函数返回布尔值，`main()` 按约定转换为 `YES` 或 `NO`。读到的 `a b` 对应图中的边 `b` 到 `a`。
+每行读一条先修关系，最后输出 `YES` 或 `NO`。
 
 ### 146. LRU 缓存
 
@@ -577,7 +505,6 @@ get 3
 **完整程序**
 
 ```python
-import sys
 from collections import OrderedDict
 
 
@@ -599,43 +526,24 @@ class LRUCache:
             self.cache.popitem()
 
 
-def main():
-    capacity, q = map(int, sys.stdin.readline().split())
-    cache = LRUCache(capacity)
-    output = []
-    for _ in range(q):
-        parts = sys.stdin.readline().split()
-        if parts[0] == "put":
-            cache.put(int(parts[1]), int(parts[2]))
-        else:
-            output.append(str(cache.get(int(parts[1]))))
-    if output:
-        sys.stdout.write("\n".join(output) + "\n")
-
-
-if __name__ == "__main__":
-    main()
+capacity, q = map(int, input().split())
+cache = LRUCache(capacity)
+for _ in range(q):
+    parts = input().split()
+    if parts[0] == "put":
+        cache.put(int(parts[1]), int(parts[2]))
+    else:
+        print(cache.get(int(parts[1])))
 ```
 
-这个例子需要保留类，因为多个操作共享同一份缓存状态。`put` 没有返回值，也不输出额外的 `None`。
+每行读一个命令，只有 `get` 需要输出。
 
-## 如何在本地运行
+## 本地运行
 
-将某个例子的完整程序保存为 `main.py`，将它的样例输入保存为 `input.txt`，然后运行：
+把完整程序存成 `main.py`，样例输入存成 `input.txt`，运行：
 
 ```bash
 python3 main.py < input.txt
 ```
 
-检查实际输出与样例输出是否一致。手动在终端输入时，EOF 是结束输入的信号，具体按键取决于终端；使用文件重定向更方便重复检查。
-
-## 提交前检查
-
-- 是否有测试组数，数组长度和矩阵尺寸是否正确读取。
-- 字符串的空格和空行是否按题意保留。
-- 链表和二叉树是否已经构造为节点，空结构如何表示。
-- 核心函数是否会修改输入，下一组是否复用了旧状态。
-- 输出是否符合大小写、分隔符、空结果和换行约定。
-- 递归算法是否可能遇到很深的树或很长的路径。必要时改成迭代实现；单纯调大递归上限也会增加栈风险。
-
-这些例子重点是完整程序的组织。需要复习算法时，可以从[算法索引](/posts/algorithm-index/)进入对应专题。
+检查输出是否与样例一致即可。
